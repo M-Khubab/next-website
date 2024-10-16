@@ -1,0 +1,101 @@
+{
+    "courses": [
+      {
+        "id": 1,
+        "name": "HTML",
+        "description": "Learn the basics of HTML, the standard markup language for creating web pages.",
+        "duration": "4 weeks",
+        "difficulty": "Beginner",
+        "price": "$49.99",
+        "instructor": "John Doe",
+        "syllabus": [
+          "Introduction to HTML",
+          "Basic Tags and Elements",
+          "Forms and Tables",
+          "Semantic HTML",
+          "HTML5 New Features"
+        ]
+      },
+      {
+        "id": 2,
+        "name": "CSS",
+        "description": "Understand the fundamentals of CSS and how to style web pages with layout, colors, and fonts.",
+        "duration": "4 weeks",
+        "difficulty": "Beginner",
+        "price": "$59.99",
+        "instructor": "Jane Smith",
+        "syllabus": [
+          "Introduction to CSS",
+          "Selectors and Properties",
+          "Box Model",
+          "Flexbox and Grid",
+          "Responsive Design"
+        ]
+      },
+      {
+        "id": 3,
+        "name": "JavaScript",
+        "description": "Master JavaScript, the programming language of the web, to build interactive websites.",
+        "duration": "6 weeks",
+        "difficulty": "Intermediate",
+        "price": "$79.99",
+        "instructor": "Alex Johnson",
+        "syllabus": [
+          "Introduction to JavaScript",
+          "Variables and Data Types",
+          "Functions and Control Flow",
+          "DOM Manipulation",
+          "Asynchronous JavaScript"
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Next.js",
+        "description": "Learn how to build powerful and scalable web applications using Next.js, a React framework.",
+        "duration": "5 weeks",
+        "difficulty": "Intermediate",
+        "price": "$89.99",
+        "instructor": "Emily Clark",
+        "syllabus": [
+          "Introduction to Next.js",
+          "Pages and Routing",
+          "API Routes",
+          "Static Site Generation (SSG)",
+          "Server-side Rendering (SSR)"
+        ]
+      },
+      {
+        "id": 6,
+        "name": "Node.js",
+        "description": "Get started with Node.js and build server-side applications using JavaScript.",
+        "duration": "6 weeks",
+        "difficulty": "Intermediate",
+        "price": "$89.99",
+        "instructor": "Sarah Lee",
+        "syllabus": [
+          "Introduction to Node.js",
+          "Modules and File System",
+          "Building REST APIs",
+          "Express.js Framework",
+          "Authentication and Authorization"
+        ]
+      },
+      {
+        "id": 9,
+        "name": "SQL",
+        "description": "Understand SQL, the language used to manage and manipulate relational databases.",
+        "duration": "4 weeks",
+        "difficulty": "Beginner",
+        "price": "$49.99",
+        "instructor": "Daniel Miller",
+        "syllabus": [
+          "Introduction to SQL",
+          "Basic Queries",
+          "Joins and Subqueries",
+          "Database Design",
+          "Stored Procedures"
+        ]
+      }
+    ]
+  }
+  
