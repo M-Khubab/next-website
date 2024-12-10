@@ -1,12 +1,10 @@
 import FeaturedCourses from "@/components/Featured-courses";
 import Footer from "@/components/Footer";
 import Herosection from "@/components/Herosection";
-import Instructors from "@/components/Instructors";
+// import Instructors from "@/components/Instructors";
 import { InfiniMovingCardsDemo } from "@/components/Movingcards";
 import { StickyScrollRevealDemo } from "@/components/StickyScrollRevealDemo";
-import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
 import UpcomingWebinar from "@/components/Upcoming-webinar";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -16,7 +14,7 @@ export default function Home() {
       <StickyScrollRevealDemo />
       <InfiniMovingCardsDemo/>
       <UpcomingWebinar/>
-      < Instructors />
+      {/* < Instructors /> */}
       <Footer />
     </main>
   );

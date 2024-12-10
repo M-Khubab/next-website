@@ -1,132 +1,130 @@
 "use client";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useMotionValueEvent, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/utills/cn";
-import React, { useEffect, useRef, useState } from "react";
-import { createNoise3D } from "simplex-noise";
 
-export const WavyBackground = ({
-  children,
-  className,
-  containerClassName,
-  colors,
-  waveWidth,
-  backgroundFill,
-  blur = 10,
-  speed = "fast",
-  waveOpacity = 0.5,
-  ...props
-}: {
-  children?: any;
-  className?: string;
-  containerClassName?: string;
-  colors?: string[];
-  waveWidth?: number;
-  backgroundFill?: string;
-  blur?: number;
-  speed?: "slow" | "fast";
-  waveOpacity?: number;
-  [key: string]: any;
+interface Content {
+  title: string;
+  description: string;
+  content?: React.ReactNode;
+}
+
+interface StickyScrollProps {
+  content: Content[];
+  contentClassName?: string;
+}
+
+export const StickyScroll: React.FC<StickyScrollProps> = ({
+  content,
+  contentClassName,
 }) => {
-  const noise = createNoise3D();
-  let w: number,
-    h: number,
-    nt: number,
-    i: number,
-    x: number,
-    ctx: any,
-    canvas: any;
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const getSpeed = () => {
-    switch (speed) {
-      case "slow":
-        return 0.001;
-      case "fast":
-        return 0.002;
-      default:
-        return 0.001;
-    }
-  };
+  const [activeCard, setActiveCard] = useState(0);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    container: ref,
+    offset: ["start start", "end start"],
+  });
 
-  const init = () => {
-    canvas = canvasRef.current;
-    ctx = canvas.getContext("2d");
-    w = ctx.canvas.width = window.innerWidth;
-    h = ctx.canvas.height = window.innerHeight;
-    ctx.filter = `blur(${blur}px)`;
-    nt = 0;
-    window.onresize = function () {
-      w = ctx.canvas.width = window.innerWidth;
-      h = ctx.canvas.height = window.innerHeight;
-      ctx.filter = `blur(${blur}px)`;
-    };
-    render();
-  };
+  const cardLength = content.length;
 
-  const waveColors = colors ?? [
-    "#38bdf8",
-    "#818cf8",
-    "#c084fc",
-    "#e879f9",
-    "#22d3ee",
-  ];
-  const drawWave = (n: number) => {
-    nt += getSpeed();
-    for (i = 0; i < n; i++) {
-      ctx.beginPath();
-      ctx.lineWidth = waveWidth || 50;
-      ctx.strokeStyle = waveColors[i % waveColors.length];
-      for (x = 0; x < w; x += 5) {
-        var y = noise(x / 800, 0.3 * i, nt) * 100;
-        ctx.lineTo(x, y + h * 0.5); // adjust for height, currently at 50% of the container
-      }
-      ctx.stroke();
-      ctx.closePath();
-    }
-  };
+  // Using useRef to store animationId instead of variable
+  const animationId = useRef<number | null>(null);
 
-  let animationId: number;
-  const render = () => {
-    ctx.fillStyle = backgroundFill || "black";
-    ctx.globalAlpha = waveOpacity || 0.5;
-    ctx.fillRect(0, 0, w, h);
-    drawWave(5);
-    animationId = requestAnimationFrame(render);
-  };
-
-  useEffect(() => {
-    init();
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-
-  const [isSafari, setIsSafari] = useState(false);
-  useEffect(() => {
-    // I'm sorry but i have got to support it on safari.
-    setIsSafari(
-      typeof window !== "undefined" &&
-        navigator.userAgent.includes("Safari") &&
-        !navigator.userAgent.includes("Chrome")
+  // Monitor scroll progress and determine active card
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const cardsBreakpoints = content.map((_, index) => index / cardLength);
+    const closestBreakpointIndex = cardsBreakpoints.reduce(
+      (acc, breakpoint, index) => {
+        const distance = Math.abs(latest - breakpoint);
+        if (distance < Math.abs(latest - cardsBreakpoints[acc])) {
+          return index;
+        }
+        return acc;
+      },
+      0
     );
-  }, []);
+    setActiveCard(closestBreakpointIndex);
+  });
+
+  // Array of linear gradients
+  const linearGradients = useMemo(
+    ()=> [
+        "linear-gradient(to bottom right, var(--cyan-500), var(--emerald-500))",
+        "linear-gradient(to bottom right, var(--pink-500), var(--indigo-500))",
+        "linear-gradient(to bottom right, var(--orange-500), var(--yellow-500))",
+      ],
+    []  
+    )
+  const [backgroundGradient, setBackgroundGradient] = useState(
+    linearGradients[0]
+  );
+
+  // Update background gradient based on active card
+  useEffect(() => {
+    setBackgroundGradient(linearGradients[activeCard % linearGradients.length]);
+  }, [linearGradients,activeCard]);
+
+  // Cleanup for requestAnimationFrame using useEffect
+  useEffect(() => {
+    const render = () => {
+      // requestAnimationFrame logic here (if needed for future updates)
+      animationId.current = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      if (animationId.current) {
+        cancelAnimationFrame(animationId.current);
+      }
+    };
+  }, []); // Empty dependency array to run only once on mount
 
   return (
-    <div
-      className={cn(
-        "h-screen flex flex-col items-center justify-center",
-        containerClassName
-      )}
+    <motion.div
+      animate={{
+        backgroundColor: "var(--slate-900)", // Background color for the main container
+      }}
+      className="h-[30rem] overflow-y-auto flex justify-between relative space-x-10 rounded-md p-10"
+      ref={ref}
     >
-      <canvas
-        className="absolute inset-0 z-0"
-        ref={canvasRef}
-        id="canvas"
-        style={{
-          ...(isSafari ? { filter: `blur(${blur}px)` } : {}),
-        }}
-      ></canvas>
-      <div className={cn("relative z-10", className)} {...props}>
-        {children}
+      <div className="relative flex items-start px-4">
+        <div className="max-w-2xl">
+          {content.map((item, index) => (
+            <div key={item.title + index} className="my-20">
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: activeCard === index ? 1 : 0.3,
+                }}
+                className="text-2xl font-bold text-slate-100"
+              >
+                {item.title}
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: activeCard === index ? 1 : 0.3,
+                }}
+                className="text-lg text-slate-300 max-w-sm mt-10"
+              >
+                {item.description}
+              </motion.p>
+            </div>
+          ))}
+          <div className="h-40" />
+        </div>
       </div>
-    </div>
+      <div
+        style={{ background: backgroundGradient }} // Apply dynamic gradient based on active card
+        className={cn(
+          "hidden lg:block h-60 w-80 rounded-md bg-white sticky top-10 overflow-hidden",
+          contentClassName
+        )}
+      >
+        {content[activeCard].content ?? null}
+      </div>
+    </motion.div>
   );
 };

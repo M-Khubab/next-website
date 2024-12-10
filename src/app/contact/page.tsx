@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer'
 import React from 'react'
-import { Meteors } from "@/components/ui/meteors";
+
 
 const page = () => {
   return (

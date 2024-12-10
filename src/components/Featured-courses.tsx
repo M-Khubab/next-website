@@ -2,8 +2,6 @@
 import { BackgroundGradient } from "./ui/background-gradient";
 import Link from "next/link";
 import coursedate from "../data/coding_courses.json"
-import { div } from "framer-motion/client";
-import { use } from "react";
 // import { button } from "framer-motion/client";
 
 function Featuredcourses(){
